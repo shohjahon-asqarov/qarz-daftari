@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base styles for mobile-first responsive design */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom components for mobile responsiveness */
+@layer components {
+  .mobile-btn {
+    @apply transition-all duration-150 active:scale-95 active:shadow-sm;
+  }
+  
+  .mobile-input {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .mobile-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100 p-4;
+  }
+  
+  .mobile-modal {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50;
+  }
+  
+  .mobile-modal-content {
+    @apply bg-white rounded-lg p-6 mx-4 w-full max-w-md;
+  }
+}
+
+/* Hide scrollbars but keep functionality */
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}

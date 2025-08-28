@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { Eye, EyeOff, Phone } from 'lucide-react';
 
 export default function Login() {
@@ -43,11 +44,15 @@ export default function Login() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      login(formData.email, formData.password);
-      setTimeout(() => navigate('/'), 1000);
+      const success = await login(formData.email, formData.password);
+      if (success) {
+        navigate('/');
+      } else {
+        setErrors({ password: 'Noto\'g\'ri email yoki parol' });
+      }
     }
   };
 
@@ -166,7 +171,7 @@ export default function Login() {
               className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <LoadingSpinner size="sm" className="text-white" />
               ) : (
                 isLogin ? 'Kirish' : 'Ro\'yxatdan o\'tish'
               )}

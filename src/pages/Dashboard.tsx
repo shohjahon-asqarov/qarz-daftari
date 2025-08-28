@@ -5,6 +5,7 @@ import CustomerCard from '../components/CustomerCard';
 import StatsCard from '../components/StatsCard';
 import QuickActions from '../components/QuickActions';
 import RecentActivity from '../components/RecentActivity';
+import FloatingActionButton from '../components/FloatingActionButton';
 import Modal from '../components/Modal';
 import AddCustomerForm from './AddCustomerForm';
 import EmptyState from '../components/EmptyState';
@@ -30,7 +31,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 space-y-4">
+    <div className="p-4 space-y-4">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-white">
         <h2 className="text-lg font-semibold mb-1">Xush kelibsiz! 👋</h2>
@@ -113,6 +114,9 @@ export default function Dashboard() {
         )}
       </div>
 
+      <FloatingActionButton onClick={() => {
+        setShowAddCustomer(true);
+      }} />
 
       <Modal
         isOpen={showAddCustomer}

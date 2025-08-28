@@ -17,7 +17,7 @@ export default function CustomerCard({ customer }: CustomerCardProps) {
   return (
     <div
       onClick={() => navigate(`/customer/${customer.id}`)}
-      className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow cursor-pointer"
+      className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow cursor-pointer mobile-card mobile-btn no-select"
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">

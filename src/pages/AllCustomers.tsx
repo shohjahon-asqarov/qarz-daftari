@@ -5,7 +5,7 @@ import CustomerCard from '../components/CustomerCard';
 import FloatingActionButton from '../components/FloatingActionButton';
 import Modal from '../components/Modal';
 import AddCustomerForm from './AddCustomerForm';
-import { ArrowLeft, Filter, SortAsc } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function AllCustomers() {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ export default function AllCustomers() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm p-4">
-        <div className="flex items-center justify-between max-w-md mx-auto">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate(-1)}
@@ -54,12 +54,12 @@ export default function AllCustomers() {
       </div>
 
       {/* Filters */}
-      <div className="max-w-md mx-auto p-4">
+      <div className="p-4">
         <div className="flex space-x-2 mb-4">
           <div className="flex-1">
             <select
               value={filterBy}
-              onChange={(e) => setFilterBy(e.target.value as any)}
+              onChange={(e) => setFilterBy(e.target.value as 'all' | 'debt' | 'paid')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
             >
               <option value="all">Barcha mijozlar</option>
@@ -70,7 +70,7 @@ export default function AllCustomers() {
           <div className="flex-1">
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'name' | 'debt' | 'date')}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
             >
               <option value="name">Ism bo'yicha</option>

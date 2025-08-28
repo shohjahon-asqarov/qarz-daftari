@@ -5,7 +5,7 @@ import { ArrowLeft, Bell, Check, Trash2 } from 'lucide-react';
 
 export default function Notifications() {
   const navigate = useNavigate();
-  const { notifications } = useApp();
+  const { notifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } = useApp();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -36,7 +36,7 @@ export default function Notifications() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm p-4">
-        <div className="flex items-center justify-between max-w-md mx-auto">
+                  <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => navigate(-1)}
@@ -52,14 +52,17 @@ export default function Notifications() {
             </div>
           </div>
           {unreadNotifications.length > 0 && (
-            <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+            <button 
+              onClick={markAllNotificationsAsRead}
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            >
               Barchasini o'qilgan deb belgilash
             </button>
           )}
         </div>
       </div>
 
-      <div className="max-w-md mx-auto p-4 space-y-6">
+      <div className="p-4 space-y-6">
         {/* Unread Notifications */}
         {unreadNotifications.length > 0 && (
           <div>
@@ -80,10 +83,18 @@ export default function Notifications() {
                       <p className="text-xs text-gray-500">{formatDate(notification.createdAt)}</p>
                     </div>
                     <div className="flex space-x-1 ml-2">
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors">
+                      <button 
+                        onClick={() => markNotificationAsRead(notification.id)}
+                        className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        title="O'qilgan deb belgilash"
+                      >
                         <Check className="w-4 h-4 text-gray-400" />
                       </button>
-                      <button className="p-1 hover:bg-gray-100 rounded transition-colors">
+                      <button 
+                        onClick={() => deleteNotification(notification.id)}
+                        className="p-1 hover:bg-gray-100 rounded transition-colors"
+                        title="O'chirish"
+                      >
                         <Trash2 className="w-4 h-4 text-gray-400" />
                       </button>
                     </div>
@@ -113,7 +124,11 @@ export default function Notifications() {
                       <p className="text-sm text-gray-600 mb-2">{notification.message}</p>
                       <p className="text-xs text-gray-500">{formatDate(notification.createdAt)}</p>
                     </div>
-                    <button className="p-1 hover:bg-gray-100 rounded transition-colors ml-2">
+                    <button 
+                      onClick={() => deleteNotification(notification.id)}
+                      className="p-1 hover:bg-gray-100 rounded transition-colors ml-2"
+                      title="O'chirish"
+                    >
                       <Trash2 className="w-4 h-4 text-gray-400" />
                     </button>
                   </div>

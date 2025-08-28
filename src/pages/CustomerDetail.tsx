@@ -3,7 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import TransactionCard from '../components/TransactionCard';
 import Modal from '../components/Modal';
-import { Phone, MapPin, Plus, ArrowLeft, MoreVertical, Edit, Trash2 } from 'lucide-react';
+import ConfirmDialog from '../components/ConfirmDialog';
+import EditCustomerForm from './EditCustomerForm';
+import { Phone, MapPin, ArrowLeft, MoreVertical, Edit, Trash2 } from 'lucide-react';
 
 export default function CustomerDetail() {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +13,8 @@ export default function CustomerDetail() {
   const { customers, transactions, addTransaction, deleteCustomer } = useApp();
   
   const [showAddTransaction, setShowAddTransaction] = useState(false);
+  const [showEditCustomer, setShowEditCustomer] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [transactionType, setTransactionType] = useState<'debt' | 'payment'>('debt');
   const [transactionForm, setTransactionForm] = useState({
@@ -57,14 +61,12 @@ export default function CustomerDetail() {
   };
 
   const handleDeleteCustomer = () => {
-    if (window.confirm('Bu mijozni o\'chirishga ishonchingiz komilmi? Barcha tranzaksiyalar ham o\'chib ketadi.')) {
-      deleteCustomer(id!);
-      navigate('/');
-    }
+    deleteCustomer(id!);
+    navigate('/');
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <div>
       {/* Header */}
       <div className="bg-white shadow-sm p-4 flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -87,12 +89,21 @@ export default function CustomerDetail() {
           </button>
           {showMenu && (
             <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-40">
-              <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+              <button 
+                onClick={() => {
+                  setShowEditCustomer(true);
+                  setShowMenu(false);
+                }}
+                className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+              >
                 <Edit className="w-4 h-4" />
                 <span>Tahrirlash</span>
               </button>
               <button 
-                onClick={handleDeleteCustomer}
+                onClick={() => {
+                  setShowDeleteConfirm(true);
+                  setShowMenu(false);
+                }}
                 className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center space-x-2"
               >
                 <Trash2 className="w-4 h-4" />
@@ -241,6 +252,32 @@ export default function CustomerDetail() {
           </div>
         </form>
       </Modal>
+
+      {/* Edit Customer Modal */}
+      <Modal
+        isOpen={showEditCustomer}
+        onClose={() => setShowEditCustomer(false)}
+        title="Mijoz ma'lumotlarini tahrirlash"
+      >
+        {customer && (
+          <EditCustomerForm 
+            customer={customer}
+            onSuccess={() => setShowEditCustomer(false)}
+            onCancel={() => setShowEditCustomer(false)}
+          />
+        )}
+      </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDeleteCustomer}
+        title="Mijozni o'chirish"
+        message="Bu mijozni o'chirishga ishonchingiz komilmi? Barcha tranzaksiyalar ham o'chib ketadi."
+        confirmText="O'chirish"
+        type="danger"
+      />
     </div>
   );
 }

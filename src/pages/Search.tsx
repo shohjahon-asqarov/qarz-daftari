@@ -5,7 +5,7 @@ import { Search as SearchIcon, ArrowLeft, User, Phone } from 'lucide-react';
 
 export default function Search() {
   const navigate = useNavigate();
-  const { customers, transactions } = useApp();
+  const { customers } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
 
   const searchResults = useMemo(() => {
@@ -30,7 +30,7 @@ export default function Search() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm p-4">
-        <div className="flex items-center space-x-3 max-w-md mx-auto">
+        <div className="flex items-center space-x-3">
           <button
             onClick={() => navigate(-1)}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -52,7 +52,7 @@ export default function Search() {
       </div>
 
       {/* Results */}
-      <div className="max-w-md mx-auto p-4">
+      <div className="p-4">
         {searchQuery.trim() === '' ? (
           <div className="text-center py-12">
             <SearchIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />

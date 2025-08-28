@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { Calendar, Download, FileText, TrendingUp, TrendingDown } from 'lucide-react';
 
 export default function Reports() {
-  const { customers, transactions } = useApp();
+  const { transactions } = useApp();
   const [dateFilter, setDateFilter] = useState({
     from: '',
     to: ''
@@ -42,7 +42,7 @@ export default function Reports() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 space-y-6">
+    <div className="p-4 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-gray-900">Hisobotlar</h1>
         <FileText className="w-6 h-6 text-blue-600" />

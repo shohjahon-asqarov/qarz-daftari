@@ -66,7 +66,7 @@ export default function Settings() {
   ];
 
   return (
-    <div className="max-w-md mx-auto p-4 space-y-6">
+    <div className="p-4 space-y-6">
       <h1 className="text-xl font-semibold text-gray-900">Sozlamalar</h1>
 
       {/* Profile Card */}
