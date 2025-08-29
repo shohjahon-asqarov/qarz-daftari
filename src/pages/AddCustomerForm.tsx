@@ -76,8 +76,8 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
             type="text"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
+            className={`w-full pl-8 pr-3 py-2 mobile-input ${
+              errors.name ? 'ring-2 ring-red-500 bg-red-50' : ''
             }`}
             placeholder="Mijoz ismini kiriting"
           />
@@ -95,8 +95,8 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
             type="tel"
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-              errors.phone ? 'border-red-500' : 'border-gray-300'
+            className={`w-full pl-8 pr-3 py-2 mobile-input ${
+              errors.phone ? 'ring-2 ring-red-500 bg-red-50' : ''
             }`}
             placeholder="+998 90 123 45 67"
           />
@@ -113,8 +113,8 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           <textarea
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-            className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${
-              errors.address ? 'border-red-500' : 'border-gray-300'
+            className={`w-full pl-8 pr-3 py-2 mobile-input resize-none ${
+              errors.address ? 'ring-2 ring-red-500 bg-red-50' : ''
             }`}
             rows={3}
             placeholder="Mijozning to'liq manzilini kiriting"
@@ -134,8 +134,8 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               type="text"
               value={formData.houseNumber}
               onChange={(e) => setFormData({ ...formData, houseNumber: e.target.value })}
-              className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors.houseNumber ? 'border-red-500' : 'border-gray-300'
+              className={`w-full pl-8 pr-3 py-2 mobile-input ${
+                errors.houseNumber ? 'ring-2 ring-red-500 bg-red-50' : ''
               }`}
               placeholder="15"
             />
@@ -153,8 +153,8 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               type="text"
               value={formData.roomNumber}
               onChange={(e) => setFormData({ ...formData, roomNumber: e.target.value })}
-              className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors.roomNumber ? 'border-red-500' : 'border-gray-300'
+              className={`w-full pl-8 pr-3 py-2 mobile-input ${
+                errors.roomNumber ? 'ring-2 ring-red-500 bg-red-50' : ''
               }`}
               placeholder="12"
             />
@@ -167,13 +167,13 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
         <button
           type="button"
           onClick={onSuccess}
-          className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          className="flex-1 mobile-btn-secondary"
         >
           Bekor qilish
         </button>
         <button
           type="submit"
-          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex-1 mobile-btn-primary"
         >
           Qo'shish
         </button>

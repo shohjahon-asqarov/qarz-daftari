@@ -31,15 +31,24 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-3 space-y-3 bg-gray-50 min-h-screen">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 text-white">
-        <h2 className="text-lg font-semibold mb-1">Xush kelibsiz! 👋</h2>
-        <p className="text-blue-100 text-sm">Bugun {new Date().toLocaleDateString('uz-UZ')} da sizning biznesingiz qanday?</p>
+      <div className="bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600 rounded-lg p-4 text-white shadow-md">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-bold mb-1">Xush kelibsiz! 👋</h2>
+            <p className="text-blue-100 text-xs opacity-90">
+              {new Date().toLocaleDateString('uz-UZ')}
+            </p>
+          </div>
+          <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+            <span className="text-lg">📊</span>
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-1.5">
         <StatsCard
           title="Jami mijozlar"
           value={totalCustomers}

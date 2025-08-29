@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import Modal from '../components/Modal';
+import ProfileEditForm from '../components/ProfileEditForm';
+import DataManager from '../components/DataManager';
 import { User, Phone, Mail, LogOut, Bell, Shield, HelpCircle, Moon, Globe, Database } from 'lucide-react';
 
 export default function Settings() {
-  const { user, logout, settings, updateSettings, resetToDefaultData } = useApp();
+  const { user, logout, settings, updateSettings } = useApp();
   const navigate = useNavigate();
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [showDataManager, setShowDataManager] = useState(false);
+  const [showLanguageSelect, setShowLanguageSelect] = useState(false);
 
   const handleLogout = () => {
     if (window.confirm('Tizimdan chiqishni xohlaysizmi?')) {
@@ -19,7 +25,7 @@ export default function Settings() {
       icon: User,
       title: 'Profil ma\'lumotlari',
       subtitle: 'Shaxsiy ma\'lumotlarni tahrirlash',
-      action: () => alert('Profil tahrirlash funksiyasi ishlab chiqilmoqda')
+      action: () => setShowProfileEdit(true)
     },
     {
       icon: Moon,
@@ -33,7 +39,7 @@ export default function Settings() {
       icon: Globe,
       title: 'Til',
       subtitle: settings.language === 'uz' ? 'O\'zbekcha' : settings.language === 'ru' ? 'Русский' : 'English',
-      action: () => alert('Til sozlamalari ishlab chiqilmoqda')
+      action: () => setShowLanguageSelect(true)
     },
     {
       icon: Bell,
@@ -52,27 +58,22 @@ export default function Settings() {
       enabled: settings.autoBackup
     },
     {
+      icon: Database,
+      title: 'Ma\'lumotlar boshqaruvi',
+      subtitle: 'Backup, import va tiklash',
+      action: () => setShowDataManager(true)
+    },
+    {
       icon: Shield,
       title: 'Xavfsizlik',
-      subtitle: 'Parol va xavfsizlik sozlamalari',
-      action: () => alert('Xavfsizlik sozlamalari ishlab chiqilmoqda')
+      subtitle: 'Ma\'lumotlar LocalStorage\'da xavfsiz saqlanadi',
+      action: () => alert('Ma\'lumotlaringiz brauzer LocalStorage\'da xavfsiz saqlanadi.\n\nMaslahat: Muntazam backup oling!')
     },
     {
       icon: HelpCircle,
-      title: 'Yordam',
-      subtitle: 'Qo\'llanma va qo\'llab-quvvatlash',
-      action: () => alert('Yordam bo\'limi ishlab chiqilmoqda')
-    },
-    {
-      icon: Database,
-      title: 'Ma\'lumotlarni tiklash',
-      subtitle: 'Barcha ma\'lumotlarni dastlabki holatga qaytarish',
-      action: () => {
-        if (window.confirm('Barcha ma\'lumotlar o\'chib ketadi va yangi demo ma\'lumotlar yuklanadi. Davom etasizmi?')) {
-          resetToDefaultData();
-          alert('Ma\'lumotlar muvaffaqiyatli tiklandi!');
-        }
-      }
+      title: 'Yordam va qo\'llab-quvvatlash',
+      subtitle: 'Qo\'llanma va bog\'lanish',
+      action: () => alert('📞 Qo\'llab-quvvatlash:\n📧 Email: support@qarz-daftari.uz\n📱 Telegram: @qarz_daftari_bot\n\n📖 Qo\'llanma loyiha README.md faylida!')
     }
   ];
 
@@ -155,6 +156,62 @@ export default function Settings() {
         <LogOut className="w-5 h-5" />
         <span className="font-medium">Tizimdan chiqish</span>
       </button>
+
+      {/* Profile Edit Modal */}
+      <Modal
+        isOpen={showProfileEdit}
+        onClose={() => setShowProfileEdit(false)}
+        title="Profil ma'lumotlarini tahrirlash"
+      >
+        <ProfileEditForm 
+          onSuccess={() => setShowProfileEdit(false)}
+          onCancel={() => setShowProfileEdit(false)}
+        />
+      </Modal>
+
+      {/* Data Manager Modal */}
+      <Modal
+        isOpen={showDataManager}
+        onClose={() => setShowDataManager(false)}
+        title="Ma'lumotlar boshqaruvi"
+      >
+        <DataManager />
+      </Modal>
+
+      {/* Language Select Modal */}
+      <Modal
+        isOpen={showLanguageSelect}
+        onClose={() => setShowLanguageSelect(false)}
+        title="Til tanlash"
+      >
+        <div className="space-y-3">
+          {[
+            { code: 'uz', name: 'O\'zbekcha', flag: '🇺🇿' },
+            { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+            { code: 'en', name: 'English', flag: '🇺🇸' }
+          ].map((lang) => (
+            <button
+              key={lang.code}
+              onClick={() => {
+                updateSettings({ language: lang.code as 'uz' | 'ru' | 'en' });
+                setShowLanguageSelect(false);
+                alert(`Til ${lang.name}ga o'zgartirildi! 🌍`);
+              }}
+              className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-colors ${
+                settings.language === lang.code
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                  : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+              }`}
+            >
+              <span className="text-2xl">{lang.flag}</span>
+              <span className="font-medium">{lang.name}</span>
+              {settings.language === lang.code && (
+                <span className="ml-auto text-blue-600">✓</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </Modal>
     </div>
   );
 }

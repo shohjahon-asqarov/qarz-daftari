@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import BottomNavigation from './BottomNavigation';
 import Header from './Header';
@@ -8,9 +7,9 @@ export default function Layout() {
   const hideBottomNav = location.pathname === '/login';
 
   return (
-    <div className="min-h-screen bg-gray-50 safe-top safe-bottom">
+    <div className="min-h-screen bg-gray-50">
       {!hideBottomNav && <Header />}
-      <main className={`${hideBottomNav ? 'pt-0' : 'pt-16 pb-20'} max-w-md mx-auto hide-scrollbar`}>
+      <main className={`${hideBottomNav ? 'pt-0' : 'pt-16 pb-24'} max-w-md mx-auto hide-scrollbar`}>
         <Outlet />
       </main>
       {!hideBottomNav && <BottomNavigation />}

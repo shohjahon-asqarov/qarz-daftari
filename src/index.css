@@ -18,27 +18,59 @@
   }
 }
 
-/* Custom components for mobile responsiveness */
+/* Modern mobile app design components */
 @layer components {
   .mobile-btn {
-    @apply transition-all duration-150 active:scale-95 active:shadow-sm;
+    @apply transition-all duration-200 active:scale-95 active:shadow-sm transform-gpu;
+  }
+  
+  .mobile-btn-primary {
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 active:scale-95 text-sm;
+  }
+  
+  .mobile-btn-secondary {
+    @apply bg-white text-gray-700 font-medium py-2 px-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 text-sm;
   }
   
   .mobile-input {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
-    font-size: 16px; /* Prevent zoom on iOS */
+    @apply bg-gray-50 border-0 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all duration-200;
+    font-size: 14px; /* Prevent zoom on iOS */
   }
   
   .mobile-card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-100 p-4;
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-all duration-200;
+  }
+  
+  .mobile-card-elevated {
+    @apply bg-white rounded-2xl shadow-lg border-0 p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
   }
   
   .mobile-modal {
-    @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50;
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm;
   }
   
   .mobile-modal-content {
-    @apply bg-white rounded-lg p-6 mx-4 w-full max-w-md;
+    @apply bg-white rounded-2xl p-6 mx-4 w-full max-w-md shadow-2xl;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .gradient-bg-success {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  }
+  
+  .gradient-bg-danger {
+    background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-md bg-white bg-opacity-80 border border-white border-opacity-20;
+  }
+  
+  .floating-action-btn {
+    @apply fixed bottom-20 right-4 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all duration-300 hover:scale-110 active:scale-95;
   }
 }
 

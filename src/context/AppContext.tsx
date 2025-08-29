@@ -4,6 +4,7 @@ import { dummyUser, dummyCustomers, dummyTransactions, dummyNotifications, defau
 
 interface AppContextType extends AppState {
   login: (email: string, password: string) => Promise<boolean>;
+  register: (userData: { name: string; email: string; phone: string; password: string }) => Promise<boolean>;
   logout: () => void;
   addCustomer: (customer: Omit<Customer, 'id' | 'totalDebt' | 'createdAt'>) => void;
   addTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
@@ -20,6 +21,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 type Action = 
   | { type: 'LOGIN'; payload: User }
+  | { type: 'REGISTER'; payload: User }
   | { type: 'LOGOUT' }
   | { type: 'ADD_CUSTOMER'; payload: Customer }
   | { type: 'UPDATE_CUSTOMER'; payload: { id: string; updates: Partial<Customer> } }
@@ -97,6 +99,8 @@ const initialState: AppState = {
 function appReducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'LOGIN':
+      return { ...state, user: action.payload };
+    case 'REGISTER':
       return { ...state, user: action.payload };
     case 'LOGOUT':
       return { ...state, user: null };
@@ -188,14 +192,69 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string): Promise<boolean> => {
     dispatch({ type: 'SET_LOADING', payload: true });
     
-    // Simple validation for demo purposes
     return new Promise((resolve) => {
       setTimeout(() => {
+        // Check demo account
         if (email === 'ahmad@example.com' && password === '123456') {
           dispatch({ type: 'LOGIN', payload: dummyUser });
           dispatch({ type: 'SET_LOADING', payload: false });
           resolve(true);
+          return;
+        }
+
+        // Check registered users
+        const users = JSON.parse(localStorage.getItem('qarz-daftari-users') || '[]');
+        const user = users.find((u: any) => u.email === email && u.password === password);
+        
+        if (user) {
+          const { password: _, ...userWithoutPassword } = user;
+          dispatch({ type: 'LOGIN', payload: userWithoutPassword });
+          dispatch({ type: 'SET_LOADING', payload: false });
+          resolve(true);
         } else {
+          dispatch({ type: 'SET_LOADING', payload: false });
+          resolve(false);
+        }
+      }, 1000);
+    });
+  };
+
+  const register = async (userData: { name: string; email: string; phone: string; password: string }): Promise<boolean> => {
+    dispatch({ type: 'SET_LOADING', payload: true });
+    
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        try {
+          // Check if email already exists
+          const users = JSON.parse(localStorage.getItem('qarz-daftari-users') || '[]');
+          const emailExists = users.some((u: any) => u.email === userData.email);
+          
+          if (emailExists) {
+            dispatch({ type: 'SET_LOADING', payload: false });
+            resolve(false);
+            return;
+          }
+
+          // Create new user
+          const newUser = {
+            id: Date.now().toString(),
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone,
+            password: userData.password, // In real app, this should be hashed
+            createdAt: new Date().toISOString()
+          };
+
+          // Save to users list
+          users.push(newUser);
+          localStorage.setItem('qarz-daftari-users', JSON.stringify(users));
+
+          // Auto login
+          const { password: _, ...userWithoutPassword } = newUser;
+          dispatch({ type: 'REGISTER', payload: userWithoutPassword });
+          dispatch({ type: 'SET_LOADING', payload: false });
+          resolve(true);
+        } catch (error) {
           dispatch({ type: 'SET_LOADING', payload: false });
           resolve(false);
         }
@@ -262,6 +321,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       value={{
         ...state,
         login,
+        register,
         logout,
         addCustomer,
         addTransaction,

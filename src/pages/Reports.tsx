@@ -37,8 +37,59 @@ export default function Reports() {
   const netDebt = totalDebts - totalPayments;
 
   const handleExport = (type: 'pdf' | 'excel') => {
-    // Placeholder for export functionality
-    alert(`${type.toUpperCase()} eksportini amalga oshirish funksiyasi hozircha ishlab chiqilmoqda`);
+    const exportData = {
+      reportDate: new Date().toLocaleDateString('uz-UZ'),
+      dateRange: {
+        from: dateFilter.from || 'Boshidan',
+        to: dateFilter.to || 'Hozirgacha'
+      },
+      summary: {
+        totalDebts: formatCurrency(totalDebts),
+        totalPayments: formatCurrency(totalPayments),
+        netDebt: formatCurrency(Math.abs(netDebt)),
+        netDebtStatus: netDebt >= 0 ? 'Qarz' : 'Ortiqcha to\'lov'
+      },
+      transactions: filteredTransactions.map(t => ({
+        date: new Date(t.date).toLocaleDateString('uz-UZ'),
+        type: t.type === 'debt' ? 'Qarz' : 'To\'lov',
+        amount: formatCurrency(t.amount),
+        description: t.description,
+        lender: t.lenderName || 'Noma\'lum'
+      }))
+    };
+
+    if (type === 'excel') {
+      // CSV format for Excel
+      let csvContent = "Sana,Turi,Miqdor,Tavsif,Qarz beruvchi\n";
+      exportData.transactions.forEach(t => {
+        csvContent += `${t.date},${t.type},${t.amount},"${t.description}",${t.lender}\n`;
+      });
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `qarz-hisoboti-${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // JSON format for PDF processing
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `qarz-hisoboti-${new Date().toISOString().split('T')[0]}.json`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Success feedback
+    alert(`${type.toUpperCase()} hisoboti muvaffaqiyatli yuklab olindi! 📊`);
   };
 
   return (

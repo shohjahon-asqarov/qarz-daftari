@@ -68,13 +68,13 @@ export default function AllCustomers() {
       </div>
 
       {/* Filters */}
-      <div className="p-4">
-        <div className="grid grid-cols-2 gap-2 mb-4">
+      <div className="p-3">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as 'all' | 'debt' | 'paid')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
             >
               <option value="all">Barcha mijozlar</option>
               <option value="debt">Qarzli mijozlar</option>
@@ -85,7 +85,7 @@ export default function AllCustomers() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'name' | 'debt' | 'date')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
             >
               <option value="name">Ism bo'yicha</option>
               <option value="debt">Qarz miqdori</option>
@@ -95,12 +95,12 @@ export default function AllCustomers() {
         </div>
 
         {/* Dom raqami bo'yicha filter */}
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="grid grid-cols-2 gap-2 mb-3">
           <div>
             <select
               value={houseFilter}
               onChange={(e) => setHouseFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
             >
               <option value="">Barcha domlar</option>
               {Array.from(new Set(customers.map(c => c.houseNumber).filter(h => h !== undefined)))
@@ -117,7 +117,7 @@ export default function AllCustomers() {
             <select
               value={lenderFilter}
               onChange={(e) => setLenderFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+              className="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-xs"
             >
               <option value="">Barcha qarz beruvchilar</option>
               {Array.from(new Set(transactions.map(t => t.lenderName).filter(Boolean)))
@@ -131,7 +131,7 @@ export default function AllCustomers() {
         </div>
 
         {/* Customer List */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           {filteredAndSortedCustomers.map((customer) => (
             <CustomerCard key={customer.id} customer={customer} />
           ))}

@@ -14,7 +14,7 @@ export default function Login() {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { login, isLoading } = useApp();
+  const { login, register, isLoading } = useApp();
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -47,37 +47,60 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      const success = await login(formData.email, formData.password);
-      if (success) {
-        navigate('/');
+      if (isLogin) {
+        // Login
+        const success = await login(formData.email, formData.password);
+        if (success) {
+          navigate('/');
+        } else {
+          setErrors({ password: 'Noto\'g\'ri email yoki parol' });
+        }
       } else {
-        setErrors({ password: 'Noto\'g\'ri email yoki parol' });
+        // Register
+        const success = await register({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password
+        });
+        if (success) {
+          navigate('/');
+        } else {
+          setErrors({ email: 'Bu email allaqachon ro\'yxatdan o\'tgan' });
+        }
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-3xl">📊</span>
+          </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Qarz Daftari</h1>
           <p className="text-gray-600">Sizning do'koningiz uchun qarz boshqaruv tizimi</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-6">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 backdrop-blur-lg">
           <div className="flex mb-6">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 text-center rounded-lg transition-colors ${
-                isLogin ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+              className={`flex-1 py-3 text-center rounded-xl font-semibold transition-all duration-200 ${
+                isLogin 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
+                  : 'text-gray-600 hover:bg-gray-100 active:scale-95'
               }`}
             >
               Kirish
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 text-center rounded-lg transition-colors ${
-                !isLogin ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+              className={`flex-1 py-3 text-center rounded-xl font-semibold transition-all duration-200 ${
+                !isLogin 
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg' 
+                  : 'text-gray-600 hover:bg-gray-100 active:scale-95'
               }`}
             >
               Ro'yxatdan o'tish
@@ -168,7 +191,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full mobile-btn-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isLoading ? (
                 <LoadingSpinner size="sm" className="text-white" />
