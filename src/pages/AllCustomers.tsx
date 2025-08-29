@@ -9,15 +9,29 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function AllCustomers() {
   const navigate = useNavigate();
-  const { customers } = useApp();
+  const { customers, transactions } = useApp();
   const [showAddCustomer, setShowAddCustomer] = useState(false);
   const [sortBy, setSortBy] = useState<'name' | 'debt' | 'date'>('name');
   const [filterBy, setFilterBy] = useState<'all' | 'debt' | 'paid'>('all');
+  const [houseFilter, setHouseFilter] = useState<string>('');
+  const [lenderFilter, setLenderFilter] = useState<string>('');
 
   const filteredAndSortedCustomers = customers
     .filter(customer => {
-      if (filterBy === 'debt') return customer.totalDebt > 0;
-      if (filterBy === 'paid') return customer.totalDebt === 0;
+      // Qarz holati bo'yicha filter
+      if (filterBy === 'debt' && customer.totalDebt <= 0) return false;
+      if (filterBy === 'paid' && customer.totalDebt > 0) return false;
+      
+      // Dom raqami bo'yicha filter
+      if (houseFilter && customer.houseNumber?.toString() !== houseFilter) return false;
+      
+      // Qarz beruvchi bo'yicha filter
+      if (lenderFilter) {
+        const customerTransactions = transactions.filter(t => t.customerId === customer.id);
+        const hasLenderTransaction = customerTransactions.some(t => t.lenderName === lenderFilter);
+        if (!hasLenderTransaction) return false;
+      }
+      
       return true;
     })
     .sort((a, b) => {
@@ -55,8 +69,8 @@ export default function AllCustomers() {
 
       {/* Filters */}
       <div className="p-4">
-        <div className="flex space-x-2 mb-4">
-          <div className="flex-1">
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div>
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as 'all' | 'debt' | 'paid')}
@@ -67,7 +81,7 @@ export default function AllCustomers() {
               <option value="paid">To'langan mijozlar</option>
             </select>
           </div>
-          <div className="flex-1">
+          <div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'name' | 'debt' | 'date')}
@@ -76,6 +90,42 @@ export default function AllCustomers() {
               <option value="name">Ism bo'yicha</option>
               <option value="debt">Qarz miqdori</option>
               <option value="date">Qo'shilgan sana</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Dom raqami bo'yicha filter */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <div>
+            <select
+              value={houseFilter}
+              onChange={(e) => setHouseFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            >
+              <option value="">Barcha domlar</option>
+              {Array.from(new Set(customers.map(c => c.houseNumber).filter(h => h !== undefined)))
+                .sort((a, b) => a - b)
+                .map(houseNum => (
+                  <option key={houseNum} value={houseNum.toString()}>
+                    {houseNum}-dom ({customers.filter(c => c.houseNumber === houseNum).length} ta)
+                  </option>
+                ))}
+            </select>
+          </div>
+          
+          <div>
+            <select
+              value={lenderFilter}
+              onChange={(e) => setLenderFilter(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            >
+              <option value="">Barcha qarz beruvchilar</option>
+              {Array.from(new Set(transactions.map(t => t.lenderName).filter(Boolean)))
+                .map(lenderName => (
+                  <option key={lenderName} value={lenderName}>
+                    {lenderName}
+                  </option>
+                ))}
             </select>
           </div>
         </div>

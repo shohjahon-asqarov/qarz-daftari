@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { Clock, TrendingUp, TrendingDown } from 'lucide-react';
+import { Clock, TrendingUp, TrendingDown, User } from 'lucide-react';
 
 export default function RecentActivity() {
   const { transactions, customers } = useApp();
@@ -59,6 +59,12 @@ export default function RecentActivity() {
                   {getCustomerName(transaction.customerId)}
                 </p>
                 <p className="text-xs text-gray-500 truncate">{transaction.description}</p>
+                {transaction.lenderName && (
+                  <div className="flex items-center mt-1">
+                    <User className="w-2.5 h-2.5 mr-1 text-blue-500" />
+                    <span className="text-xs text-blue-600 font-medium">{transaction.lenderName}</span>
+                  </div>
+                )}
               </div>
               <div className="text-right">
                 <p className={`text-sm font-semibold ${

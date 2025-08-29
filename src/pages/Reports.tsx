@@ -151,6 +151,36 @@ export default function Reports() {
         </div>
       </div>
 
+      {/* Lender Summary */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+        <h3 className="font-medium text-gray-900 mb-3">Qarz beruvchilar</h3>
+        <div className="space-y-2 text-sm">
+          {Array.from(new Set(filteredTransactions.map(t => t.lenderName).filter(Boolean)))
+            .map(lenderName => {
+              const lenderTransactions = filteredTransactions.filter(t => t.lenderName === lenderName);
+              const lenderDebts = lenderTransactions.filter(t => t.type === 'debt').reduce((sum, t) => sum + t.amount, 0);
+              const lenderPayments = lenderTransactions.filter(t => t.type === 'payment').reduce((sum, t) => sum + t.amount, 0);
+              
+              return (
+                <div key={lenderName} className="bg-gray-50 p-3 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-medium text-gray-900">{lenderName}</span>
+                    <span className="text-sm text-gray-600">{lenderTransactions.length} ta tranzaksiya</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="text-red-600">
+                      Berilgan: {formatCurrency(lenderDebts)}
+                    </div>
+                    <div className="text-green-600">
+                      Qaytarilgan: {formatCurrency(lenderPayments)}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+
       {/* Export Buttons */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
         <h3 className="font-medium text-gray-900 mb-3 flex items-center">

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LocalStorage Tozalash</title>
+</head>
+<body>
+    <h1>LocalStorage Tozalash</h1>
+    <button onclick="clearStorage()">LocalStorage'ni tozalash</button>
+    <button onclick="showStorage()">Hozirgi ma'lumotlarni ko'rsatish</button>
+    <button onclick="loadNewData()">Yangi fake ma'lumotlar yuklash</button>
+    <pre id="output"></pre>
+
+    <script>
+        function clearStorage() {
+            localStorage.removeItem('qarz-daftari-data');
+            document.getElementById('output').textContent = 'LocalStorage tozalandi!';
+        }
+
+        function showStorage() {
+            const data = localStorage.getItem('qarz-daftari-data');
+            document.getElementById('output').textContent = data ? JSON.stringify(JSON.parse(data), null, 2) : 'Ma\'lumot yo\'q';
+        }
+
+        function loadNewData() {
+            // Yangi fake ma'lumotlarni yuklash
+            clearStorage();
+            
+            // Sahifani yangilash - yangi dummy data yuklash uchun
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+
+        // Sahifa yuklanganda ma'lumotlarni ko'rsatish
+        showStorage();
+    </script>
+</body>
+</html>

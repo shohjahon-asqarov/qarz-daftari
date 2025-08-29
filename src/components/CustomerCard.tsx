@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Phone, MapPin } from 'lucide-react';
+import { Phone, MapPin, Home, Hash } from 'lucide-react';
 import { Customer } from '../types';
 
 interface CustomerCardProps {
@@ -26,10 +26,22 @@ export default function CustomerCard({ customer }: CustomerCardProps) {
             <Phone className="w-3 h-3 mr-1" />
             <span>{customer.phone}</span>
           </div>
-          <div className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600 mb-1">
             <MapPin className="w-3 h-3 mr-1" />
             <span className="truncate">{customer.address}</span>
           </div>
+          {customer.houseNumber && customer.roomNumber && (
+            <div className="flex items-center text-xs text-gray-500 space-x-3">
+              <div className="flex items-center">
+                <Home className="w-3 h-3 mr-1" />
+                <span>Dom: {customer.houseNumber}</span>
+              </div>
+              <div className="flex items-center">
+                <Hash className="w-3 h-3 mr-1" />
+                <span>Xona: {customer.roomNumber}</span>
+              </div>
+            </div>
+          )}
         </div>
         <div className="text-right ml-4">
           <div className={`text-lg font-bold ${customer.totalDebt > 0 ? 'text-red-600' : 'text-green-600'}`}>

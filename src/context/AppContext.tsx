@@ -13,6 +13,7 @@ interface AppContextType extends AppState {
   markAllNotificationsAsRead: () => void;
   deleteNotification: (id: string) => void;
   updateSettings: (settings: Partial<AppSettings>) => void;
+  resetToDefaultData: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -29,7 +30,8 @@ type Action =
   | { type: 'MARK_ALL_NOTIFICATIONS_READ' }
   | { type: 'DELETE_NOTIFICATION'; payload: string }
   | { type: 'UPDATE_SETTINGS'; payload: Partial<AppSettings> }
-  | { type: 'LOAD_FROM_STORAGE'; payload: Partial<AppState> };
+  | { type: 'LOAD_FROM_STORAGE'; payload: Partial<AppState> }
+  | { type: 'RESET_TO_DEFAULT' };
 
 // LocalStorage utility functions
 const STORAGE_KEY = 'qarz-daftari-data';
@@ -37,7 +39,29 @@ const STORAGE_KEY = 'qarz-daftari-data';
 const loadFromStorage = (): Partial<AppState> => {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : {};
+    if (!data) return {};
+    
+    const parsed = JSON.parse(data);
+    
+    // Migration: Add missing fields to existing customers
+    if (parsed.customers) {
+      parsed.customers = parsed.customers.map((customer: any) => ({
+        ...customer,
+        houseNumber: customer.houseNumber ?? 0,
+        roomNumber: customer.roomNumber ?? 0
+      }));
+    }
+    
+    // Migration: Add missing fields to existing transactions
+    if (parsed.transactions) {
+      parsed.transactions = parsed.transactions.map((transaction: any) => ({
+        ...transaction,
+        lenderId: transaction.lenderId ?? '1',
+        lenderName: transaction.lenderName ?? 'Noma\'lum'
+      }));
+    }
+    
+    return parsed;
   } catch (error) {
     console.error('Error loading from localStorage:', error);
     return {};
@@ -140,6 +164,14 @@ function appReducer(state: AppState, action: Action): AppState {
       };
     case 'LOAD_FROM_STORAGE':
       return { ...state, ...action.payload };
+    case 'RESET_TO_DEFAULT':
+      return {
+        ...state,
+        customers: dummyCustomers,
+        transactions: dummyTransactions,
+        notifications: dummyNotifications,
+        settings: defaultSettings
+      };
     default:
       return state;
   }
@@ -185,11 +217,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'ADD_CUSTOMER', payload: newCustomer });
   };
 
-  const addTransaction = (transactionData: Omit<Transaction, 'id' | 'date'>) => {
+  const addTransaction = (transactionData: Omit<Transaction, 'id' | 'date' | 'lenderId' | 'lenderName'>) => {
     const newTransaction: Transaction = {
       ...transactionData,
       id: Date.now().toString(),
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
+      lenderId: state.user?.id || '1',
+      lenderName: state.user?.name || 'Noma\'lum'
     };
     dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
   };
@@ -218,6 +252,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     dispatch({ type: 'UPDATE_SETTINGS', payload: settings });
   };
 
+  const resetToDefaultData = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    dispatch({ type: 'RESET_TO_DEFAULT' });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -231,7 +270,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         markNotificationAsRead,
         markAllNotificationsAsRead,
         deleteNotification,
-        updateSettings
+        updateSettings,
+        resetToDefaultData
       }}
     >
       {children}

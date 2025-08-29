@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { User, Phone, Mail, LogOut, Bell, Shield, HelpCircle, Moon, Globe, Database } from 'lucide-react';
 
 export default function Settings() {
-  const { user, logout, settings, updateSettings } = useApp();
+  const { user, logout, settings, updateSettings, resetToDefaultData } = useApp();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -62,6 +62,17 @@ export default function Settings() {
       title: 'Yordam',
       subtitle: 'Qo\'llanma va qo\'llab-quvvatlash',
       action: () => alert('Yordam bo\'limi ishlab chiqilmoqda')
+    },
+    {
+      icon: Database,
+      title: 'Ma\'lumotlarni tiklash',
+      subtitle: 'Barcha ma\'lumotlarni dastlabki holatga qaytarish',
+      action: () => {
+        if (window.confirm('Barcha ma\'lumotlar o\'chib ketadi va yangi demo ma\'lumotlar yuklanadi. Davom etasizmi?')) {
+          resetToDefaultData();
+          alert('Ma\'lumotlar muvaffaqiyatli tiklandi!');
+        }
+      }
     }
   ];
 

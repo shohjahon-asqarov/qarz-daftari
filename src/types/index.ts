@@ -3,6 +3,8 @@ export interface Customer {
   name: string;
   phone: string;
   address: string;
+  houseNumber?: number;
+  roomNumber?: number;
   totalDebt: number;
   createdAt: string;
 }
@@ -14,6 +16,8 @@ export interface Transaction {
   amount: number;
   description: string;
   date: string;
+  lenderId?: string; // Kim tomonidan qarz berilayotgani (User ID)
+  lenderName?: string; // Qarz beruvchining ismi
 }
 
 export interface User {
